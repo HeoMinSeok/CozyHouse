@@ -50,6 +50,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = formState;
     const newErrors = {
       email: !formState.email,
@@ -85,12 +86,14 @@ const SignUp = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 border-4 bg-blue-50 shadow-lg sm:rounded-3xl sm:p-20 dark:bg-gray-700">
           <div className="max-w-md mx-auto">
-            <div className="flex flex-col items-center justify-center mb-6 hover:cursor-pointer" onClick={() => navigate("/")}>
-              <img src={icons.MainHome} className="h-16 w-16 mb-4" alt="CozyHouse Logo"/>
+            <div className="flex flex-col items-center justify-center mb-6 hover:cursor-pointer"
+                 onClick={() => navigate("/")}>
+              <img src={icons.MainHome as string} className="h-16 w-16 mb-4" alt="CozyHouse Logo"/>
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white text-center">CozyHouse</h1>
             </div>
             <div>
-              <form onSubmit={handleSubmit} className="py-4 text-base leading-6 space-y-4 text-gray-700 dark:text-gray-400 sm:text-lg sm:leading-7">
+              <form onSubmit={handleSubmit}
+                    className="py-4 text-base leading-6 space-y-4 text-gray-700 dark:text-gray-400 sm:text-lg sm:leading-7">
                 <div className="relative">
                   <input
                     name="email"
