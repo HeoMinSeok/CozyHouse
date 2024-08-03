@@ -17,7 +17,20 @@ const Login = () => {
   /*  디바운스 적용 입력 최적화 */
   const [dEmail] = useDebounce(email, 300);
   const [dPassword] = useDebounce(password, 300);
-  
+
+  const kakaoLogin = () => {
+    window.location.href = 'http://localhost:8081/oauth2/authorization/kakao';
+  };
+
+  const githubLogin = () => {
+    window.location.href = 'http://localhost:8081/oauth2/authorization/github';
+  };
+
+  const googleLogin = () => {
+    window.location.href = 'http://localhost:8081/oauth2/authorization/google';
+  };
+
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,12 +105,15 @@ const Login = () => {
           </div>
           <p className="text-center text-gray-900 dark:text-white text-xs mb-1">SNS계정으로 간편 로그인/회원가입</p>
           <div className="flex items-center justify-center space-x-4">
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+              onClick={googleLogin}>
               <GoogleLogin />
             </button>
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+              onClick={kakaoLogin}>
               <KakaoLogin />
             </button>
+            <button onClick={githubLogin}>GitHub로 로그인</button>
           </div>
         </div>
       </div>

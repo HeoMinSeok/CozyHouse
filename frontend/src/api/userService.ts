@@ -1,9 +1,10 @@
 // import axios from 'axios';
 import { UserLogin, UserSignUp, User } from './../types/userType';
+import axios from 'axios';
 
 export default class userService {
   // static BASE_URL = "/api";
-  static BASE_URL = "http://localhost:4000";
+  static BASE_URL = "http://localhost:8081";
 
   /* 로그인 FETCH */
   static async login(userLogin: UserLogin): Promise<User | null> {
@@ -22,32 +23,50 @@ export default class userService {
       return foundUser;
     } catch (e) {
       console.error("로그인 에러", e);
-      throw e;  
+      throw e;
     }
   }
 
-  /* 회원가입 FETCH */
+  // /* 회원가입 FETCH */
+  // static async signUp(userSignup: UserSignUp): Promise<User | null> {
+  //   try {
+  //     const response = await fetch(`${this.BASE_URL}/users`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(userSignup),
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error('회원가입에 실패했습니다.');
+  //     }
+  
+  //     const newUser: User = await response.json();
+  //     return newUser;
+  //   } catch (e) {
+  //     console.error("회원가입 에러", e);
+  //     throw e;
+  //   }
+  // }
+
+  /* 회원가입 Axios */
   static async signUp(userSignup: UserSignUp): Promise<User | null> {
     try {
-      const response = await fetch(`${this.BASE_URL}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userSignup),
-      });
+      const response = await axios.post(
+        `${this.BASE_URL}/users/signup`, userSignup,);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('회원가입에 실패했습니다.');
       }
-
-      const newUser: User = await response.json();
+      console.log(response);
+      const newUser: User = response.data;
       return newUser;
     } catch (e) {
       console.error("회원가입 에러", e);
       throw e;
     }
   }
+}
 
   /* 서버 연결 후 BASE_URL 및 AXIOS로 변경 */
-}
