@@ -4,6 +4,7 @@ export interface User {
   password: string;
   nickname: string;
   phone: string;
+  verificationCode: string;
 }
 
 export interface UserLogin extends Pick<User, 'email' | 'password'> {}

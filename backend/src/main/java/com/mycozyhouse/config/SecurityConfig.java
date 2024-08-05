@@ -96,13 +96,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         // 로그인, 루트, 회원가입 페이지는 모두 접근 허용
-                        .requestMatchers("/login","/login/**", "/", "/users/**", "/reissue","/oauth2/**").permitAll()
+                        .requestMatchers("/login","/login/**", "/", "/users/**", "/reissue","/**","/change","/sms/**").permitAll()
                         // /admin 경로는 ADMIN 역할을 가진 사용자만 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/reissue").permitAll()
+
                         // 그 외 모든 요청은 인증된 사용자만 접근 허용
                         .anyRequest().authenticated());
-
+      
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
@@ -121,9 +121,6 @@ public class SecurityConfig {
                         .userService(customOAuth2UserService))
                 .successHandler(customSuccessHandler)
         );
-//                .exceptionHandling(exceptions ->
-//                exceptions.authenticationEntryPoint(authenticationEntryPoint)
-//        );
 
         // 세션 관리 설정: RESTful API는 무상태성을 유지해야함, 세션을 사용하지 않도록 Stateless로 설정 (주로 JWT 사용 시)
         http

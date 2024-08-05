@@ -9,9 +9,12 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.util.HashMap;
+import java.util.Map;
 
 // 원래는 예외가 발생하면 was까지 예외가 던져지고 was에서 오류페이지 정보를 찾아서 에러를 호출하지만
 // 스프링의 커스텀 예외를 활용하면 예외가 발생한 지점에서 직접적으로 http상태코드와 메세지를 반환할 수 잇다.
@@ -39,6 +42,13 @@ public class ExControllerAdvice {
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler
     public ResponseEntity<ErrorResult> handleDataIntegrityViolation(DataIntegrityViolationException e) {
         log.error("[exceptionHandle] ex", e);
