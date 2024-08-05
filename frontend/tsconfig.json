@@ -1,8 +1,5 @@
 {
   "files": [],
-  "include": [
-    "src/**/*"  // src 디렉토리 아래의 모든 파일 포함
-  ],
   "references": [
     {
       "path": "./tsconfig.app.json"

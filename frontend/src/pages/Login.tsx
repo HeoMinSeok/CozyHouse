@@ -21,20 +21,6 @@ const Login = () => {
   const [dEmail] = useDebounce(email, 300);
   const [dPassword] = useDebounce(password, 300);
 
-  const kakaoLogin = () => {
-    window.location.href = 'http://localhost:8081/oauth2/authorization/kakao';
-  };
-
-  const githubLogin = () => {
-    window.location.href = 'http://localhost:8081/oauth2/authorization/github';
-  };
-
-  const googleLogin = () => {
-    window.location.href = 'http://localhost:8081/oauth2/authorization/google';
-  };
-
-
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -42,7 +28,7 @@ const Login = () => {
       showToast('Hi 👏🏻', 'success', darkMode);
       setTimeout(() => {
         navigate('/');
-      }, 1500);  
+      }, 1500);
     } catch (error: any) {
       showToast(`${error}`, 'error', darkMode);
     }
@@ -110,15 +96,24 @@ const Login = () => {
           </div>
           <p className="text-center text-gray-900 dark:text-white text-xs mb-1">SNS계정으로 간편 로그인/회원가입</p>
           <div className="flex items-center justify-center space-x-4">
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            <a
+              href="api/oauth2/authorization/google"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
               <GoogleLogin />
-            </button>
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            </a>
+            <a
+              href="api/oauth2/authorization/kakao"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
               <KakaoLogin />
-            </button>
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
-              <VscGithub size="full"/>
-            </button>
+            </a>
+            <a
+              href="api/oauth2/authorization/github"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
+              <VscGithub size="full" />
+            </a>
           </div>
         </div>
       </div>
