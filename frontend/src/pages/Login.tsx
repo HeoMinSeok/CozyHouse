@@ -103,16 +103,16 @@ const Login = () => {
               <GoogleLogin />
             </a>
             <a
-              href="api/oauth2/authorization/kakao"
+              href="/api/oauth2/authorization/kakao"
               className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
             >
               <KakaoLogin />
             </a>
             <a
-              href="api/oauth2/authorization/github"
+              href="/api/oauth2/authorization/github"
               className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
             >
-              <VscGithub size="full" />
+              <VscGithub style={{ width: "100%", height: "100%" }} />
             </a>
           </div>
         </div>
