@@ -65,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // UserEntity 객체 생성 및 필드 설정
         UserEntity userEntity = new UserEntity();
-        userEntity.setNickname(email); // username 설정
+        userEntity.setEmail(email); // username 설정
         userEntity.setStatus(status); // role 설정
 
         // CustomUserDetails 객체 생성

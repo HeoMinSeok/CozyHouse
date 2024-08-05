@@ -83,7 +83,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
         //인증된 사용자의 이메일을 가져옴
-        String nickName = authentication.getName();
+        String email = authentication.getName();
 
         // 사용자의 상태를 가져옴(회원 , 비회원)
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -130,11 +130,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Cookie cookie = new Cookie(key, value); // 주어진 키와 값을 사용하여 새로운 쿠키 객체를 생성
         cookie.setMaxAge(24 * 60 * 60);   // 쿠키의 최대 수명을 24시간으로 설정 (초 단위)
-        // cookie.setSecure(true); // 쿠키를 HTTPS 연결에서만 사용할 수 있도록 설정
-        // cookie.setPath("/"); // 쿠키가 웹 어플리케이션의 루트 경로에서만 접근 가능하도록 설정
+//         cookie.setSecure(true); // 쿠키를 HTTPS 연결에서만 사용할 수 있도록 설정
+         cookie.setPath("/"); // 쿠키가 웹 어플리케이션의 루트 경로에서만 접근 가능하도록 설정
         cookie.setHttpOnly(true); // 쿠키를 JavaScript에서 접근할 수 없도록 설정하여 보안을 강화
 
-        return cookie;  // 생성된 쿠키 객체를 반환
+        return cookie;
     }
 
     //로그인 성공했을 때  새로운 토큰저장

@@ -44,32 +44,28 @@ public class CustomUserDetails implements UserDetails {
     // 사용자의 아이디를 반환
     @Override
     public String getUsername() {
-        return userEntity.getNickname();
+        return userEntity.getEmail();
     }
 
-    // 계정이 만료되지 않았는지를 반환
-    // 기본 구현을 호출하여 반환하고 있어, 기본적으로 계정이 만료되지 않은 상태
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
     }
 
-    // 계정이 잠기지 않았는지를 반환
-    // 기본 구현을 호출하여 반환하고 있어, 기본적으로 계정이 잠기지 않은 상태
+    // 계정이 잠기지 않았는지를 반환, 기본적으로 계정이 잠기지 않은 상태
     @Override
     public boolean isAccountNonLocked() {
         return UserDetails.super.isAccountNonLocked();
     }
 
-    // 자격 증명이 만료되지 않았는지를 반환
-    // 기본 구현을 호출하여 반환하고 있어, 기본적으로 자격 증명이 만료되지 않은 상태
+    // 자격 증명이 만료되지 않았는지를 반환, 기본적으로 자격 증명이 만료되지 않은 상태
     @Override
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
-    // 계정이 활성화되었는지를 반환
-    // 기본 구현을 호출하여 반환하고 있어, 기본적으로 계정이 활성화된 상태
+
+    // 계정이 활성화되었는지를 반환, 기본적으로 계정이 활성화된 상태
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();

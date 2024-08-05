@@ -26,18 +26,21 @@ public class GoogleDTO implements OAuth2DTO {
     @Override
     public String getProviderId() {
         Object providerId = attribute.get("sub");
-        return providerId != null ? providerId.toString() : null; // null 체크
+
+        return providerId != null ? providerId.toString() : null;
     }
 
     @Override
     public String getEmail() {
         Object email = attribute.get("email");
-        return email != null ? email.toString() : null; // null 체크
+
+        return email != null ? email.toString() : null;
     }
 
     @Override
     public String getName() {
         Object name = attribute.get("name");
-        return name != null ? name.toString() : null; // null 체크
+
+        return name != null ? name.toString() : null;
     }
 }

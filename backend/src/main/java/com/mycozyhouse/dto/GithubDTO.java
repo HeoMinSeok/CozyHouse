@@ -7,7 +7,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GithubDTO implements OAuth2DTO{
 
-    private final Map<String, Object> attributes;
+    private final Map<String, Object> attribute;
 
     @Override
     public String getProvider() {
@@ -16,16 +16,22 @@ public class GithubDTO implements OAuth2DTO{
 
     @Override
     public String getProviderId() {
-        return String.valueOf(attributes.get("id"));
+
+        Object providerId = attribute.get("id");
+        return providerId != null ? providerId.toString() : null;
     }
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+
+        Object email = attribute.get("email");
+        return email != null ? email.toString() : null;
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+
+        Object name = attribute.get("name");
+        return name != null ? name.toString() : null;
     }
 }

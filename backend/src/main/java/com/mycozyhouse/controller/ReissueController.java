@@ -9,9 +9,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,9 +32,16 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
-        // 리프레시 토큰을 초기화
-        String refresh = request.getHeader("refresh"); // 요청 헤더에서 "refresh" 토큰 가져오기
+        //쿠키에서 리프레쉬 토큰 추출
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
 
+            if (cookie.getName().equals("refresh")) {
+
+                refresh = cookie.getValue();
+            }
+        }
 
         System.out.println("refresh = " + refresh);
         // 리프레시 토큰이 없을 경우 처리
@@ -108,4 +117,33 @@ public class ReissueController {
 
         refreshRepository.save(refreshEntity);
     }
+    //accessToken 쿠키를 응답헤더로 반환
+    @GetMapping("/change")
+    @ResponseBody
+    public ResponseEntity<String> change(HttpServletRequest request) {
+
+        System.out.println("컨트롤실행");
+        // 요청에서 쿠키 읽기
+        Cookie[] cookies = request.getCookies();
+        String accessToken = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("access")) {
+                    accessToken = cookie.getValue(); // 쿠키에서 access 토큰 값 읽기
+                    break; // access 토큰을 찾았으면 반복 종료
+                }
+            }
+        }
+
+        // 응답 헤더에 access 토큰 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("access", accessToken); // 없을 경우 대체 값 설정
+
+        // 응답에 헤더 추가
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body("main route");
+    }
 }
+
