@@ -12,6 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2UserDTO implements OAuth2User {
 
+
     private final UserDTO userDTO;
 
     // 각 소셜 제공자마다 응답하는 Attributes 형태가 다르기 때문에 사용하지 않음
@@ -29,6 +30,7 @@ public class OAuth2UserDTO implements OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
+
                 return userDTO.getStatus().toString();
             }
         });
@@ -38,11 +40,13 @@ public class OAuth2UserDTO implements OAuth2User {
     // 사용자 이름을 반환하는 메서드
     @Override
     public String getName() {
+
         return userDTO.getNickname();
     }
 
     // 사용자 이메일반환
     public String getEmail() {
+
         return userDTO.getEmail();
     }
 

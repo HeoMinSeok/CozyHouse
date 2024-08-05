@@ -78,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private UserEntity createUserEntity(OAuth2DTO oAuth2Response, String registrationId) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(oAuth2Response.getEmail());
-        userEntity.setNickname(oAuth2Response.getName());
+        userEntity.setNickname(oAuth2Response.getName()+oAuth2Response.getProviderId());
         userEntity.setStatus(UserStatus.MEMBER);
         userEntity.setProvider(getProviderType(registrationId));
         return userEntity;
@@ -91,6 +91,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private UserDTO createUserDTO(UserEntity userEntity, OAuth2DTO oAuth2Response) {
+
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setNickname(userEntity.getNickname());
