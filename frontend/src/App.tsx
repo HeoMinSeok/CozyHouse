@@ -3,8 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import useDarkModeStore from './stores/useDarkModeStore';
 
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -19,7 +19,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`flex flex-col min-h-screen ${darkMode ? 'dark:bg-custom-dark-bg' : 'bg-custom-light-bg'}`}>
-      {!isAuthPage && <Header darkMode={darkMode}/>}
+      {!isAuthPage && <Header darkMode={darkMode} />}
       <main className={`flex-grow ${!isAuthPage ? 'mt-20' : ''}`}>
         <Outlet context={{ darkMode }} />
       </main>

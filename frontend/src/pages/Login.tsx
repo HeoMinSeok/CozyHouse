@@ -3,8 +3,11 @@ import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import useUserStore from '../stores/useUserStore';
 
+import { VscGithub } from "react-icons/vsc";
 import { GoogleLogin, KakaoLogin } from '../assets/svg/SvgIcons';
 import icons from '../assets/icons';
+
+import Toast, { showToast } from '../components/utils/Toast';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,16 +20,17 @@ const Login = () => {
   /*  디바운스 적용 입력 최적화 */
   const [dEmail] = useDebounce(email, 300);
   const [dPassword] = useDebounce(password, 300);
-  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await login({ email: dEmail, password: dPassword });
-      alert('로그인 완료')
+      showToast('Hi 👏🏻', 'success', darkMode);
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);  
     } catch (error: any) {
-      console.error('로그인 실패:', error);
-      alert(error.message);
+      showToast(`${error}`, 'error', darkMode);
     }
   };
 
@@ -36,8 +40,8 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 border-4 bg-blue-50 shadow-lg sm:rounded-3xl sm:p-20 dark:bg-gray-700">
           <div className="max-w-md mx-auto">
-            <div className="flex flex-col items-center justify-center mb-6 hover:cursor-pointer " onClick={() => navigate("/")}>
-              <img src={icons.MainHome} className="h-16 w-16 mb-4 " alt="CozyHouse Logo" />
+            <div className="flex flex-col items-center justify-center mb-6 hover:cursor-pointer" onClick={() => navigate("/")}>
+              <img src={icons.MainHome} className="h-16 w-16 mb-4" alt="CozyHouse Logo" />
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white text-center">CozyHouse</h1>
             </div>
             <div>
@@ -98,9 +102,13 @@ const Login = () => {
             <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
               <KakaoLogin />
             </button>
+            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+              <VscGithub size="full"/>
+            </button>
           </div>
         </div>
       </div>
+      <Toast darkMode={darkMode} />
     </div>
   );
 }

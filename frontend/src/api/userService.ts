@@ -11,13 +11,13 @@ export default class userService {
     try {
       const response = await fetch(`${this.BASE_URL}/users`);
       if (!response.ok) {
-        throw new Error('네트워크 응답이 실패했습니다.');
+        throw new Error('네트워크 응답이 실패');
       }
 
       const users: User[] = await response.json();
       const foundUser = users.find(user => user.email === email && user.password === password);
       if (!foundUser) {
-        throw new Error('아이디 또는 비밀번호가 틀렸습니다.');
+        throw new Error('회원정보를 확인해주세요 ❗️');
       }
       return foundUser;
     } catch (e) {
