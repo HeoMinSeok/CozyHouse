@@ -1,14 +1,11 @@
-import HomeBanner from '../components/HomeBanner';
-import React, {useEffect} from 'react';
+import HomeBanner from '../components/home/HomeBanner.tsx';
+import HomeMiniNav from '../components/home/HomeMiniNav.tsx';
+import HomeContents from '../components/home/HomeContents.tsx';
+import React, { useEffect } from 'react';
 import axios from "axios";
-import useUserStore from "../stores/useUserStore.ts";
 
 const Home: React.FC = () => {
-
-    const user = useUserStore((state) => state.user); // user 객체를 가져옴
-
     useEffect(() => {
-        // 비동기 함수를 즉시 실행
         const fetchData = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const loginMethod = urlParams.get('loginMethod');
@@ -52,8 +49,9 @@ const Home: React.FC = () => {
         <div
             className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4 bg-custom-light-bg dark:bg-custom-dark-bg">
             <div className="w-full">
-                <HomeBanner/>
-                {/* 추후 추가 */}
+                <HomeBanner />
+                <HomeMiniNav />
+                <HomeContents />
             </div>
         </div>
     );

@@ -96,12 +96,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // JWT 토큰 생성
         // access 토큰 생성: 만료 시간 600초(10분)
-        String access = jwtUtil.createJwt("access", nickName, status, 600000L);
+        String access = jwtUtil.createJwt("access", email, status, 600000L);
         // refresh 토큰 생성: 만료 시간 86400초(1일)
-        String refresh = jwtUtil.createJwt("refresh", nickName, status, 86400000L);
+        String refresh = jwtUtil.createJwt("refresh", email, status, 86400000L);
 
         //Refresh 토큰 저장
-        addRefreshEntity(nickName, refresh, 86400000L);
+        addRefreshEntity(email, refresh, 86400000L);
 
         // 응답 설정
         // 생성된 access 토큰을 응답 헤더에 설정합니다.
