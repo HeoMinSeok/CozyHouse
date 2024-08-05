@@ -1,9 +1,12 @@
 import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import icons from '../assets/icons';
 import useUserStore from '../stores/useUserStore';
 import { UserSignUp } from '../types/userType';
+
+import icons from '../assets/icons';
+
+import Toast, { showToast } from '../components/utils/Toast';
 
 interface SignUpFormState extends UserSignUp {
   confirmPassword: string;
@@ -43,6 +46,13 @@ const SignUp = () => {
       ...prevState,
       [name]: value
     }));
+
+    if (value.trim() !== '') {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [name]: false
+      }));
+    }
   };
 
   useEffect(() => {
@@ -110,6 +120,7 @@ const SignUp = () => {
     setErrors(newErrors);
 
     if (Object.values(newErrors).some(error => error)) {
+      showToast('모든 필드를 입력해주세요', 'warn', darkMode);
       const firstErrorField = Object.keys(newErrors).find(field => newErrors[field as keyof typeof newErrors]);
       if (firstErrorField) {
         (document.getElementsByName(firstErrorField)[0] as HTMLInputElement).focus();
@@ -118,12 +129,13 @@ const SignUp = () => {
     }
 
     try {
-      await signUp(formState);
-      alert(`WELCOME ${formState.nickname}`);
-      navigate("/login");
+      await signUp(userData);
+      showToast('WELCOM ' + `${formState.nickname}` + '님 👏🏻', 'success', darkMode);
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);  
     } catch (error) {
-      console.error('회원가입 실패', error);
-      // 에러 처리 (예: 사용자에게 에러 메시지 표시)
+      showToast(`${error}`, 'error', darkMode);
     }
   };
 
@@ -270,6 +282,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      <Toast darkMode={darkMode} />
     </div>
   );
 };

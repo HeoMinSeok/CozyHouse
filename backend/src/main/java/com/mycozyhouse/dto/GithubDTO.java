@@ -16,18 +16,21 @@ public class GithubDTO implements OAuth2DTO{
 
     @Override
     public String getProviderId() {
+
         Object providerId = attribute.get("id");
         return providerId != null ? providerId.toString() : null;
     }
 
     @Override
     public String getEmail() {
+
         Object email = attribute.get("email");
         return email != null ? email.toString() : null;
     }
 
     @Override
     public String getName() {
+
         Object name = attribute.get("name");
         return name != null ? name.toString() : null;
     }

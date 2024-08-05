@@ -5,6 +5,7 @@ import com.mycozyhouse.entity.UserEntity;
 import com.mycozyhouse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.logging.BasicLogger;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -90,12 +91,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private UserDTO createUserDTO(UserEntity userEntity, OAuth2DTO oAuth2Response) {
-        UserDTO UserDTO = new UserDTO();
-        UserDTO.setEmail(userEntity.getEmail());
-        UserDTO.setNickname(userEntity.getNickname());
-        UserDTO.setStatus(userEntity.getStatus());
-        UserDTO.setProvider(userEntity.getProvider());
-        return UserDTO;
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(userEntity.getEmail());
+        userDTO.setNickname(userEntity.getNickname());
+        userDTO.setStatus(userEntity.getStatus());
+        userDTO.setProvider(userEntity.getProvider());
+        return userDTO;
     }
 
     private ProviderType getProviderType(String registrationId) {

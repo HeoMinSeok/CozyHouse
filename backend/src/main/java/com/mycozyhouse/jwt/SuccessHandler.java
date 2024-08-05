@@ -63,6 +63,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
         System.out.println("Access Token: " + access);
         System.out.println("Refresh Token: " + refresh);
+
         // 성공적으로 인증된 후 사용자를 특정 URI로 리다이렉트
         response.sendRedirect("http://localhost:5173/?loginMethod=social");
     }

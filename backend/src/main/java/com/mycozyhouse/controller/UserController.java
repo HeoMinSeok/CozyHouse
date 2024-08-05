@@ -1,6 +1,7 @@
 package com.mycozyhouse.controller;
 
 
+
 import com.mycozyhouse.config.CustomUserDetails;
 import com.mycozyhouse.dto.UserDTO;
 import com.mycozyhouse.dto.UserDTO;
@@ -23,6 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
+
     public ResponseEntity<UserDTO> signup(@RequestBody @Valid UserDTO userDTO) {
         UserDTO dto = userService.signup(userDTO); // 예외가 발생할 경우, GlobalExceptionHandler 가 처리
         return ResponseEntity.ok(dto);

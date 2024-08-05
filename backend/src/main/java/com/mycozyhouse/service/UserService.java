@@ -11,6 +11,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,19 +24,19 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 회원가입
-    public UserDTO signup(UserDTO UserDTO){
-
+    public UserDTO signup(UserDTO userDTO){
         // 이메일 중복 체크
-        if (userRepository.existsByEmail(UserDTO.getEmail())) {
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new DataIntegrityViolationException("이미 존재하는 이메일입니다.");
         }
 
         // UserEntity 객체 생성
         UserEntity user = new UserEntity();
-        user.setEmail(UserDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(UserDTO.getPassword()));
-        user.setNickname(UserDTO.getNickname());
-        user.setPhone(UserDTO.getPhone());
+
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        user.setNickname(userDTO.getNickname());
+        user.setPhone(userDTO.getPhone());
 
         // 기본 상태를 MEMBER로 설정
         user.setStatus(UserStatus.MEMBER);

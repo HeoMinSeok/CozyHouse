@@ -29,6 +29,7 @@ public class CustomUserDetails implements UserDetails {
                 return userEntity.getStatus().toString();
             }
         });
+
         // 권한 정보를 담은 컬렉션 반환
         return collection;
     }
@@ -40,19 +41,12 @@ public class CustomUserDetails implements UserDetails {
         return userEntity.getPassword();
     }
 
-//    // 이메일을 반환하는 메서드 추가
-//    public String getEmail() {
-//        return userEntity.getEmail(); // UserEntity에 getEmail() 메서드가 있다고 가정
-//    }
-
-
     // 사용자의 아이디를 반환
     @Override
     public String getUsername() {
         return userEntity.getEmail();
     }
 
-    // 계정이 만료되지 않았는지를 반환, 기본적으로 계정이 만료되지 않은 상태
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
@@ -69,6 +63,7 @@ public class CustomUserDetails implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
+
 
     // 계정이 활성화되었는지를 반환, 기본적으로 계정이 활성화된 상태
     @Override

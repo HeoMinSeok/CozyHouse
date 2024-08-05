@@ -1,5 +1,5 @@
-import icons from "../assets/icons";
-import { DiscordIcon, GithubIcon } from "../assets/svg/SvgIcons";
+import icons from "../../assets/icons";
+import { DiscordIcon, GithubIcon } from "../../assets/svg/SvgIcons";
 
 const Footer = () => {
   return (

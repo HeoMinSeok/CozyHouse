@@ -11,6 +11,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "refresh")
 public class RefreshEntity {
 
     @Id

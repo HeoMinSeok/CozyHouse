@@ -99,9 +99,10 @@ public class SecurityConfig {
                         .requestMatchers("/login","/login/**", "/", "/users/**", "/reissue","/**","/change","/sms/**").permitAll()
                         // /admin 경로는 ADMIN 역할을 가진 사용자만 접근 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
+
                         // 그 외 모든 요청은 인증된 사용자만 접근 허용
                         .anyRequest().authenticated());
-
+      
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
