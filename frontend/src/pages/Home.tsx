@@ -1,23 +1,21 @@
-import HomeBanner from '../components/HomeBanner';
+import HomeBanner from '../components/home/HomeBanner.tsx';
+import HomeMiniNav from '../components/home/HomeMiniNav.tsx';
+import HomeContents from '../components/home/HomeContents.tsx';
 import React, {useEffect} from 'react';
 import axios from "axios";
-import useUserStore from "../stores/useUserStore.ts";
+import userService from "../api/userService.ts";
 
 const Home: React.FC = () => {
-
-    const user = useUserStore((state) => state.user); // user 객체를 가져옴
-
+    //소셜로그인이면 엑세스 쿠키를 응답헤더로 변환 후 로컬에 저장
     useEffect(() => {
-        // 비동기 함수를 즉시 실행
         const fetchData = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const loginMethod = urlParams.get('loginMethod');
 
             if (loginMethod === 'social') {
-                await handleSocialLogin(); // handleSocialLogin에서 await 사용
+                await handleSocialLogin();
             }
         };
-
         fetchData().catch(error => {
             console.error('데이터를 가져오는 중 에러 발생', error);
         });
@@ -28,9 +26,17 @@ const Home: React.FC = () => {
 
         if (!accessToken) {
             const response = await checkAccessToken();
+
             if (response) {
-                const { access } = response.headers;
+                const {access} = response.headers;
                 localStorage.setItem('access', access);
+
+                const userResponse = await axios.get(`${userService.BASE_URL}/users`, {
+                    headers: {Authorization: `Bearer ${access}`},
+                    withCredentials: true
+                });
+                console.log('Response Status:', userResponse.status);
+                console.log('Response Data:', userResponse.data);
             } else {
                 alert('액세스 토큰을 로컬스토리지에 저장 실패.');
             }
@@ -39,21 +45,23 @@ const Home: React.FC = () => {
 
     const checkAccessToken = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/change', {
+            const response = await axios.get(`${userService.BASE_URL}/change`, {
                 withCredentials: true
             });
-            return response; // 성공적으로 응답을 받은 경우 응답 반환
+            return response;
         } catch (error) {
             console.error('쿠키를 응답헤더로 반환 실패', error);
-            return null; // 실패 시 null 반환
+            return null;
         }
     }
+
     return (
         <div
             className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4 bg-custom-light-bg dark:bg-custom-dark-bg">
             <div className="w-full">
                 <HomeBanner/>
-                {/* 추후 추가 */}
+                <HomeMiniNav/>
+                <HomeContents/>
             </div>
         </div>
     );

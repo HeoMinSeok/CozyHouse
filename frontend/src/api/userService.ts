@@ -38,18 +38,19 @@ export default class userService {
         withCredentials: true
       });
 
-      // 로그인 성공 시 JWT를 반환합니다.
       const { access } = response.headers;
       localStorage.setItem('access', access);
 
-      // 액세스 토큰을 사용하여 사용자 정보를 요청
+      //토큰을 이용한 사용자 정보추출
       const userResponse = await axios.get(`${this.BASE_URL}/users`, {
         headers: { Authorization: `Bearer ${access}` },
         withCredentials: true
       });
 
+      console.log("userResponse.data = " + userResponse.data.email)
+      console.log("userResponse.data = " + userResponse.data.nickname)
       const newUser: User = userResponse.data;
-      return newUser; // 사용자 데이터 반환
+      return newUser;
     } catch (e) {
       console.error("로그인 에러", e);
       throw e;
@@ -74,23 +75,21 @@ export default class userService {
 
   // 인증번호 검증
   static async verifyVerificationCode(phone: string, verificationCode: string): Promise<string> {
-    try {
-      const response = await axios.post(
-          `${this.BASE_URL}/sms/verify`,
-          { phone, verificationCode }
-      );
+      try {
+          const response = await axios.post(
+              `${this.BASE_URL}/sms/verify`,
+              {phone, verificationCode}
+          );
 
-      if (response.status !== 200) {
-        throw new Error('인증번호 검증에 실패했습니다.');
+          if (response.status !== 200) {
+              throw new Error('인증번호 검증에 실패했습니다.');
+          }
+          return response.data;
+      } catch (e) {
+          console.error("인증번호 검증 에러", e);
+          throw e;
       }
-      return response.data;
-    } catch (e) {
-      console.error("인증번호 검증 에러", e);
-      throw e;
-    }
   }
-
-
 }
 
   /* 서버 연결 후 BASE_URL 및 AXIOS로 변경 */

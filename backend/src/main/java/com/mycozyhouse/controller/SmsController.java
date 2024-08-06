@@ -1,6 +1,6 @@
 package com.mycozyhouse.controller;
 
-import com.mycozyhouse.dto.UserDTO;
+import com.mycozyhouse.dto.UserDto;
 import com.mycozyhouse.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
@@ -20,7 +20,7 @@ public class SmsController {
 
     // 인증코드 발급
     @PostMapping("/send")
-    public ResponseEntity<String> sendSms(@RequestBody UserDTO UserDTO) {
+    public ResponseEntity<String> sendSms(@RequestBody UserDto UserDTO) {
         String verificationCode = smsService.generateVerificationCode();
         SingleMessageSentResponse response = smsService.sendOne(UserDTO.getPhone(), verificationCode);
 
@@ -33,7 +33,7 @@ public class SmsController {
 
     // 인증코드 검증
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyCode(@RequestBody UserDTO UserDTO) {
+    public ResponseEntity<String> verifyCode(@RequestBody UserDto UserDTO) {
         boolean isValid = smsService.verifyCode(UserDTO.getPhone(), UserDTO.getVerificationCode());
 
         if (isValid) {

@@ -1,24 +1,10 @@
 package com.mycozyhouse.dto;
 
 import lombok.RequiredArgsConstructor;
-
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class KakaoDTO implements OAuth2DTO {
-
-/*
-    {
-        "id": 123456789,
-            "properties": {
-        "nickname": "사용자명"
-    },
-        "kakao_account": {
-        "email": "user@example.com",
-                "profile_nickname": "사용자명"
-    }
-    }
-    */
+public class KakaoDto implements OAuth2Dto {
 
     private final Map<String, Object> attributes;
 

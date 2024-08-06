@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Getter
 public class BaseTimeEntity {
 
-    //등록시간, 수정시간
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createDate;

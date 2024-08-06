@@ -1,19 +1,13 @@
 package com.mycozyhouse.controller;
 
 
-
 import com.mycozyhouse.config.CustomUserDetails;
-import com.mycozyhouse.dto.UserDTO;
-import com.mycozyhouse.dto.UserDTO;
+import com.mycozyhouse.dto.UserDto;
 import com.mycozyhouse.service.UserService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -23,18 +17,19 @@ public class UserController {
 
     private final UserService userService;
 
+    //회원가입
     @PostMapping("/signup")
-
-    public ResponseEntity<UserDTO> signup(@RequestBody @Valid UserDTO userDTO) {
-        UserDTO dto = userService.signup(userDTO); // 예외가 발생할 경우, GlobalExceptionHandler 가 처리
+    public ResponseEntity<UserDto> signup(@RequestBody @Valid UserDto userDTO) {
+        UserDto dto = userService.signup(userDTO);
         return ResponseEntity.ok(dto);
     }
 
+   //일반사용자 토큰으로 사용자 정보 조회
     @GetMapping
-//    @PreAuthorize("hasAuthority('NON_MEMBER')") // 사용자 권한 체크
-    public ResponseEntity<UserDTO> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<UserDto> localUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        UserDTO userInfo = userService.getUserInfo(userDetails.getUsername()); // 또는 다른 필드 사용 가능
+        UserDto userInfo = userService.getUserInfo(userDetails.getUsername());
+        System.out.println("User Info: " + userInfo);
         return ResponseEntity.ok(userInfo);
     }
 }

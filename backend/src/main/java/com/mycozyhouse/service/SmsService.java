@@ -52,9 +52,8 @@ public class SmsService {
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-        // Redis 에 인증 코드 저장
         ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
-        valueOps.set(to, verificationCode, 5, TimeUnit.MINUTES); // 5분 동안 유효
+        valueOps.set(to, verificationCode, 5, TimeUnit.MINUTES);
 
         return response;
     }

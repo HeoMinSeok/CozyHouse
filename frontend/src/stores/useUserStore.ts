@@ -22,8 +22,8 @@ const useUserStore = create<UserState>()(
           const user = await userService.login(userLogin);
           set({ user });
         } catch (error) {
-            console.error('회원가입 실패:', error);
-            throw new Error('회원가입에 실패했습니다');
+            console.error('로그인 실패:', error);
+            throw new Error('로그인에 실패했습니다');
         }
       },
       signUp: async (userSignup: UserSignUp) => {
