@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
@@ -26,6 +25,6 @@ public class UserDto {
     private String nickname;
     private ProviderType provider;
     private UserStatus status;
-    @NotNull
+//    @NotNull
     private String verificationCode;
 }

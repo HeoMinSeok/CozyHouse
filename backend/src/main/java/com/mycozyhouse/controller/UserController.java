@@ -29,7 +29,6 @@ public class UserController {
     public ResponseEntity<UserDto> localUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         UserDto userInfo = userService.getUserInfo(userDetails.getUsername());
-        System.out.println("User Info: " + userInfo);
         return ResponseEntity.ok(userInfo);
     }
 }

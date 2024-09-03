@@ -4,6 +4,8 @@ import com.mycozyhouse.dto.UserStatus;
 import com.mycozyhouse.entity.RefreshEntity;
 import com.mycozyhouse.jwt.JWTUtil;
 import com.mycozyhouse.repository.RefreshRepository;
+import com.mycozyhouse.service.ReissueService;
+import com.mycozyhouse.utill.CookieUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,102 +18,37 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
 //나중에 컨트롤과 서비스 계층 나누기
 //리프레쉬 만료된 토큰 삭제하는 스케쥴 추가하기
-@Controller
-@ResponseBody
+@RestController
 @RequiredArgsConstructor
 public class ReissueController {
 
-    private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final ReissueService reissueService;
 
-    //리프레쉬 로테이션
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = CookieUtil.getCookieValue(request, "refresh");
 
-        String refresh = null;
-        Cookie[] cookies = request.getCookies();
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
-            }
-        }
-
-        if (refresh == null) {
+        if (refreshToken == null) {
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
-        try {
-            jwtUtil.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
-        }
+            String newAccess = reissueService.reissueToken(refreshToken);
+            String newRefresh = reissueService.createNewRefreshToken(refreshToken);
+            response.addCookie(CookieUtil.createCookie("refresh", newRefresh));
+            response.addHeader("access", newAccess);
 
-        String category = jwtUtil.getCategory(refresh);
-
-        if (!category.equals("refresh")) {
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
-        }
-
-        Boolean isExist = refreshRepository.existsByRefresh(refresh);
-        if (!isExist) {
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
-        }
-
-        String nickname = jwtUtil.getNickname(refresh);
-
-        String newAccess = jwtUtil.createJwt("access", nickname, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", nickname, 86400000L);
-
-        refreshRepository.deleteByRefresh(refresh);
-        addRefreshEntity(nickname, newRefresh, 86400000L);
-
-        response.addCookie(createCookie("access", newAccess));
-        response.addCookie(createCookie("refresh", newRefresh));
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Tokens reissued successfully", HttpStatus.OK);
     }
 
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24 * 60 * 60);
-        cookie.setHttpOnly(true);
-        return cookie;
-    }
-
-    private void addRefreshEntity(String nickname, String refresh, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setNickname(nickname);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
-
-        refreshRepository.save(refreshEntity);
-    }
-
-    //accessToken 쿠키를 응답헤더로 반환
     @GetMapping("/change")
-    @ResponseBody
     public ResponseEntity<String> change(HttpServletRequest request) {
-
-        Cookie[] cookies = request.getCookies();
-        String accessToken = null;
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("access")) {
-                    accessToken = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String accessToken = CookieUtil.getCookieValue(request, "access");
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("access", accessToken);

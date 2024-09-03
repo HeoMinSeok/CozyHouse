@@ -7,6 +7,7 @@ import com.mycozyhouse.entity.UserEntity;
 import com.mycozyhouse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public class UserService {
     }
 
     public UserDto getUserInfo(String nickname) {
-        UserEntity userEntity = userRepository.findByNickname(nickname);
+        UserEntity userEntity = userRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("User not found with nickname: " + nickname));
 
         UserDto userDTO = new UserDto();
         userDTO.setId(userEntity.getId());

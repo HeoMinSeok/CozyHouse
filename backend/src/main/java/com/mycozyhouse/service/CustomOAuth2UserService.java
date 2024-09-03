@@ -6,6 +6,7 @@ import com.mycozyhouse.entity.UserEntity;
 import com.mycozyhouse.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -38,7 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
 
             String nickname  = oAuth2Response.getName() + oAuth2Response.getProviderId();
-            UserEntity userEntity = userRepository.findByNickname(nickname);
+            UserEntity userEntity = userRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("User not found with nickname: " + nickname));
 
             if (userEntity == null) {
                 userEntity = createUserEntity(oAuth2Response, registrationId);

@@ -9,6 +9,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +41,14 @@ public class ExControllerAdvice {
         log.error("[exceptionHandle] ex", e); // 예외 로그를 남긴다.
         ErrorResult errorResult = new ErrorResult("USER-EX", e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResult> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        log.error("[exceptionHandle] ex", e);
+        ErrorResult errorResult = new ErrorResult("USER-NOT-FOUND", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

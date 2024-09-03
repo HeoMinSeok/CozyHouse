@@ -3,6 +3,7 @@ package com.mycozyhouse.jwt;
 import com.mycozyhouse.dto.UserStatus;
 import com.mycozyhouse.entity.RefreshEntity;
 import com.mycozyhouse.repository.RefreshRepository;
+import com.mycozyhouse.utill.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,27 +38,18 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         String nickname = customUserDetails.getName();
 
-        String access = jwtUtil.createJwt("access", nickname, 600000L);
+        String access = jwtUtil.createJwt("access", nickname, 50000L);
         String refresh = jwtUtil.createJwt("refresh", nickname,86400000L);
 
         addRefreshEntity(nickname, refresh, 86400000L);
 
-        response.addCookie(createCookie("access", access));
-        response.addCookie(createCookie("refresh", refresh));
+        response.addCookie(CookieUtil.createCookie("access", access));
+        response.addCookie(CookieUtil.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
         System.out.println("Access Token: " + access);
         System.out.println("Refresh Token: " + refresh);
 
         response.sendRedirect("http://localhost:5173/?loginMethod=social");
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 60);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-
-        return cookie;
     }
 
     //로그인 성공했을 때  새로운 토큰저장

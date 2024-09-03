@@ -5,6 +5,9 @@ import com.mycozyhouse.dto.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -26,5 +29,11 @@ public class UserEntity extends BaseTimeEntity {
     private UserStatus status;
     @Enumerated(EnumType.STRING)
     private ProviderType provider;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<MediaPostEntity> mediaPosts = new ArrayList<>();
 
+    public void addMediaPosts(MediaPostEntity mediaPostEntity){
+        mediaPosts.add(mediaPostEntity);
+        mediaPostEntity.setUser(this);
+    }
 }
