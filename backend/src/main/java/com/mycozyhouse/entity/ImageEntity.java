@@ -16,7 +16,8 @@ public class ImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
     private Long id;
-    private String mediaUrl;
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_post_id")
     private MediaPostEntity mediaPost;

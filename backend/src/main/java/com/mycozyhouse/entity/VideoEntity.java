@@ -17,7 +17,8 @@ public class VideoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "video_id")
     private Long id;
-    private String mediaUrl;
+    private String videoUrl;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_post_id")
     private MediaPostEntity mediaPost;

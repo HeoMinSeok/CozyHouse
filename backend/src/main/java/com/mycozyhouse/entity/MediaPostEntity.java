@@ -21,16 +21,24 @@ public class MediaPostEntity {
     private Long id;
     private String comment;
     private String location;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
     @OneToOne(mappedBy = "mediaPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private VideoEntity video;
+
     @OneToMany(mappedBy = "mediaPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImageEntity> images = new ArrayList<>();
 
     public void addImage(ImageEntity imageEntity){
         images.add(imageEntity);
         imageEntity.setMediaPost(this);
+    }
+
+    public void addVideo(VideoEntity videoEntity) {
+        this.video = videoEntity;
+        videoEntity.setMediaPost(this);
     }
 }

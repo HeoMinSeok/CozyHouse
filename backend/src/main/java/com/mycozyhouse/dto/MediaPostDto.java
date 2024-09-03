@@ -11,5 +11,4 @@ public class MediaPostDto {
 
     private String comment;
     private String location;
-    private List<MultipartFile> images;
 }
