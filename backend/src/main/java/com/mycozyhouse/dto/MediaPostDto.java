@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class MediaPostDto {
 
-    private String comment;
+    private String mediaContent;
     private String location;
 }

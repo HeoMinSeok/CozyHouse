@@ -119,14 +119,14 @@ const SignUp = () => {
 
     setErrors(newErrors);
 
-    if (Object.values(newErrors).some(error => error)) {
-      showToast('모든 필드를 입력해주세요', 'warn', darkMode);
-      const firstErrorField = Object.keys(newErrors).find(field => newErrors[field as keyof typeof newErrors]);
-      if (firstErrorField) {
-        (document.getElementsByName(firstErrorField)[0] as HTMLInputElement).focus();
-      }
-      return;
-    }
+    // if (Object.values(newErrors).some(error => error)) {
+    //   showToast('모든 필드를 입력해주세요', 'warn', darkMode);
+    //   const firstErrorField = Object.keys(newErrors).find(field => newErrors[field as keyof typeof newErrors]);
+    //   if (firstErrorField) {
+    //     (document.getElementsByName(firstErrorField)[0] as HTMLInputElement).focus();
+    //   }
+    //   return;
+    // }
 
     try {
       await signUp(userData);

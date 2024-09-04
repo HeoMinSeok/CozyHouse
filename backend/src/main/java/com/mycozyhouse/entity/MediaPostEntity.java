@@ -13,13 +13,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MediaPostEntity {
+public class MediaPostEntity extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "media_post_id")
     private Long id;
-    private String comment;
+    private String mediaContent;
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)

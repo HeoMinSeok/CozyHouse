@@ -20,11 +20,11 @@ public class MediaPostController {
 
     //글쓰기 작성
     @PostMapping("/write")
-    public ResponseEntity<String> uploadImage(@RequestPart("comment") String comment,
+    public ResponseEntity<String> uploadImage(@RequestPart("mediaContent") String mediaContent,
                                               @RequestPart("location") String location,
                                               @RequestPart("file") List<MultipartFile> files) {
 
-        mediaPostService.saveMediaPost(comment, location,  files);
+        mediaPostService.saveMediaPost(mediaContent, location,  files);
 
         return ResponseEntity.ok("글작성이 완료되었습니다");
     }
