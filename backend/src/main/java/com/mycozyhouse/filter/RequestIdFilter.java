@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+// HTTP 요청에 고유한 요청 ID를 생성하여 요청 속성에 저장하는 필터
 @Component
 public class RequestIdFilter extends OncePerRequestFilter {
 
@@ -20,13 +21,10 @@ public class RequestIdFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // 8자리 난수로 요청 ID 생성
-        String requestId =  UUID.randomUUID().toString().substring(0, 8);
 
-        // 요청 속성에 요청 ID 저장
+        String requestId =  UUID.randomUUID().toString().substring(0, 8);
         request.setAttribute(REQUEST_ID_HEADER, requestId);
 
-        // 필터 체인을 계속해서 호출
         filterChain.doFilter(request, response);
     }
 }

@@ -1,7 +1,5 @@
 package com.mycozyhouse.entity;
 
-import com.mycozyhouse.dto.ProviderType;
-import com.mycozyhouse.dto.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

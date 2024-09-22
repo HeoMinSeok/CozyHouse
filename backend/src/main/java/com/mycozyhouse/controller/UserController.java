@@ -1,6 +1,5 @@
 package com.mycozyhouse.controller;
 
-
 import com.mycozyhouse.config.CustomUserDetails;
 import com.mycozyhouse.dto.UserDto;
 import com.mycozyhouse.service.UserService;
@@ -24,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-   //일반사용자 토큰으로 사용자 정보 조회
+   //토큰으로 사용자 정보 조회
     @GetMapping
     public ResponseEntity<UserDto> localUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
 

@@ -1,10 +1,8 @@
 package com.mycozyhouse.controller;
 
-import com.mycozyhouse.dto.MediaPostDto;
 import com.mycozyhouse.service.MediaPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;

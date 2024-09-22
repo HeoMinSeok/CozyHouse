@@ -1,11 +1,9 @@
 package com.mycozyhouse.config;
 
-
 import com.mycozyhouse.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

@@ -29,7 +29,7 @@ public class MediaPostService {
     @Transactional
     public void saveMediaPost(String mediaContent, String location, List<MultipartFile> files) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByNickname(username).orElseThrow(() -> new UsernameNotFoundException("User not found with nickname: " + username));
+        UserEntity user = userRepository.findByNickname(username);
 
         MediaPostEntity mediaPostEntity = buildMediaPost(mediaContent, location);
         user.addMediaPosts(mediaPostEntity);

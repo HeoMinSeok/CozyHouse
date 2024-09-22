@@ -16,7 +16,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class PerformanceAspect {
 
-
     // 메소드 깊이를 추적하기 위한 스레드 로컬 변수
     private ThreadLocal<Integer> callDepth = ThreadLocal.withInitial(() -> 0);
 

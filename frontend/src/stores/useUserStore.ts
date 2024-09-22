@@ -58,31 +58,31 @@ const useUserStore = create<UserState>()(
             handleSocialLogin: async () => {
                 try {
                     const accessToken = localStorage.getItem('access');
-
                     if (!accessToken) {
-                        const response = await userService.checkAccessToken();
+                        const response = await userService.changeAccessToken();
                         if (response) {
                             const { access } = response.headers;
                             localStorage.setItem('access', access);
-
                             const user = await userService.getMyProfile(access);
                             set({ user });
                             return;
                         }
+                    }else if(accessToken){
+                        const user = await userService.getMyProfile(accessToken);
+                        set({ user });
+                        return;
                     }
-
-                    await useUserStore.getState().reissueAccessToken();
                 } catch (error) {
                     console.error('소셜 로그인 처리 중 오류 발생:', error);
                     throw error;
                 }
             },
 
-            reissueAccessToken: async () => { // 추가된 부분
+            reissueAccessToken: async () => {
                 try {
-                    const newAccessToken = await userService.reissueAccessToken(); // 액세스 토큰 재발급
+                    const newAccessToken = await userService.reissueAccessToken();
                     if (newAccessToken) {
-                        const user = await userService.getMyProfile(newAccessToken); // 새로운 액세스 토큰으로 사용자 정보 가져오기
+                        const user = await userService.getMyProfile(newAccessToken);
                         set({ user });
                     } else {
                         console.error('리프레쉬토큰으로 사용가 정보 가져오기 중 오류 발생.');

@@ -5,7 +5,7 @@ import React, {useEffect} from 'react';
 import useUserStore from '../stores/useUserStore';
 
 const Home: React.FC = () => {
-    const { handleSocialLogin, fetchUserInfo, user  } = useUserStore();
+    const { handleSocialLogin,  user  } = useUserStore();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +22,7 @@ const Home: React.FC = () => {
         fetchData().catch(error => {
             console.error('데이터를 가져오는 중 에러 발생', error);
         });
-    }, [fetchUserInfo, handleSocialLogin]);
+    }, [handleSocialLogin]);
 
     return (
         <div className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4 bg-custom-light-bg dark:bg-custom-dark-bg">

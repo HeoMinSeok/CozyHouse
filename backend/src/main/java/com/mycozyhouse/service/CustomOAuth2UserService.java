@@ -25,13 +25,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        try {
             OAuth2User oAuth2User = super.loadUser(userRequest);
-            System.out.println("oAuth2User: " + oAuth2User);
-            System.out.println("oAuth2User Attributes: " + oAuth2User.getAttributes());
 
             String registrationId = userRequest.getClientRegistration().getRegistrationId();
-            System.out.println("Registration ID: " + registrationId);
 
             OAuth2Dto oAuth2Response = getOAuth2Response(oAuth2User, registrationId);
             if (oAuth2Response == null) {
@@ -39,20 +35,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             }
 
             String nickname  = oAuth2Response.getName() + oAuth2Response.getProviderId();
-            UserEntity userEntity = userRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("User not found with nickname: " + nickname));
+            UserEntity userEntity = userRepository.findByNickname(nickname);
 
             if (userEntity == null) {
                 userEntity = createUserEntity(oAuth2Response, registrationId);
             } else {
                 updateUserEntity(userEntity, oAuth2Response, registrationId);
             }
+
             userRepository.save(userEntity);
 
             return new OAuth2UserDetails(createUserDTO(userEntity, oAuth2Response));
 
-        } catch (OAuth2AuthenticationException e) {
-            throw e;
-        }
     }
 
     private OAuth2Dto getOAuth2Response(OAuth2User oAuth2User, String registrationId) {

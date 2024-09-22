@@ -13,7 +13,7 @@ import java.util.Date;
 //JWT를 발급 및 검증 등
 @Component
 public class JWTUtil {
-    private final SecretKey secretKey;  // 대칭 키
+    private final SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -61,7 +61,7 @@ public class JWTUtil {
     /**
      * 새로운 JWT를 생성하는 메서드
      * @param category   JWT에 포함될 토큰의 종류
-     * @param nickname   JWT에 포함될 사용자 이름. 사용자의 식별 정보를 나타냄.
+     * @param nickname   JWT에 포함될 사용자 이름. 사의 식별 정보를 나타냄.
      * @param expiredMs  JWT의 만료 시간을 설정하는 밀리초. 현재 시간으로부터 얼마나 뒤에 만료되는지를 나타냄.
      * @return 생성된 JWT 문자열. 클레임이 포함된 서명된 토큰을 반환함.
      */

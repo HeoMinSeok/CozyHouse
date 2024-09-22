@@ -2,7 +2,6 @@ package com.mycozyhouse.dto;
 
 import lombok.RequiredArgsConstructor;
 import java.util.Map;
-
 @RequiredArgsConstructor
 public class NaverDto implements OAuth2Dto {
 
@@ -29,7 +28,6 @@ public class NaverDto implements OAuth2Dto {
     }
 
     private String getResponseValue(String key) {
-        // response 필드를 가져옴
         Map<String, Object> response = (Map<String, Object>) attribute.get("response");
         if (response != null && response.containsKey(key)) {
             Object value = response.get(key);

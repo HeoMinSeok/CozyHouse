@@ -1,27 +1,22 @@
 package com.mycozyhouse.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycozyhouse.dto.UserStatus;
 import com.mycozyhouse.entity.RefreshEntity;
 import com.mycozyhouse.repository.RefreshRepository;
 import com.mycozyhouse.utill.CookieUtil;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -52,11 +47,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             Map<String, String> loginRequest = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
+
+            if (email == null || email.isEmpty() || !isValidEmail(email)) {
+                throw new BadCredentialsException("유효한 이메일 주소를 입력하세요.");
+            }
+
+            if (password == null || password.isEmpty()) {
+                throw new BadCredentialsException("비밀번호는 필수입니다.");
+            }
+
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("로그인 요청 처리 중 오류 발생", e);
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        return email.matches(emailRegex);
     }
 
     /**
@@ -94,6 +103,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(401);
+
     }
 
     //로그인 성공했을 때  새로운 토큰저장
@@ -102,7 +112,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setRefresh(nickname);
+        refreshEntity.setNickname(nickname);
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
 

@@ -15,7 +15,6 @@ public class KakaoDto implements OAuth2Dto {
 
     @Override
     public String getProviderId() {
-        // "id"는 카카오에서 반환하는 사용자 ID입니다.
         return attributes.get("id").toString();
     }
 

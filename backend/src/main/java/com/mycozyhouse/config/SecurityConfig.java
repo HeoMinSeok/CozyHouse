@@ -1,6 +1,6 @@
 package com.mycozyhouse.config;
 
-
+import com.mycozyhouse.filter.CspFilter;
 import com.mycozyhouse.jwt.*;
 import com.mycozyhouse.repository.RefreshRepository;
 import com.mycozyhouse.service.CustomOAuth2UserService;
@@ -71,8 +71,10 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new RefreshTokenFilter(jwtUtil, refreshRepository), JWTFilter.class) // new 방식으로 사용
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class)
+                .addFilterBefore(new CspFilter(), UsernamePasswordAuthenticationFilter.class) // CSP 필터 추가
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))

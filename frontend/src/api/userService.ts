@@ -77,15 +77,17 @@ export default class userService {
         }
     }
 
-    /* 액세스 토큰 확인 */
-    static async checkAccessToken() {
+    /* 액세스 토큰 변환 */
+    static async changeAccessToken() {
         try {
             const response = await axios.get(`${this.BASE_URL}/change`, {
                 withCredentials: true,
             });
+            document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
             return response;
-        } catch (error) {
-            console.error('쿠키를 응답헤더로 반환 실패', error);
+        } catch (e) {
+            console.error('쿠키를 응답헤더로 반환 실패', e);
             return null;
         }
     }
@@ -97,8 +99,8 @@ export default class userService {
                 headers: {Authorization: `Bearer ${accessToken}`},
             });
             return userResponse.data;
-        } catch (error) {
-            console.error('사용자 정보 가져오기 실패:', error);
+        } catch (e) {
+            console.error('사용자 정보 가져오기 실패:', e);
             return null;
         }
     }
@@ -106,15 +108,14 @@ export default class userService {
     /* 리프레시 토큰을 이용해 액세스 토큰 재발급 */
     static async reissueAccessToken() {
         try {
-            console.log("reissueAccessToken실행")
             const response = await axios.post(`${this.BASE_URL}/reissue`,{}, {
                 withCredentials: true
             });
             const { access } = response.headers;
             localStorage.setItem('access', access);
             return access;
-        } catch (error) {
-            console.error('액세스 토큰 재발급 실패:', error);
+        } catch (e) {
+            console.error('액세스 토큰 재발급 실패:', e);
             return null;
         }
     }

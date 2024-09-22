@@ -2,7 +2,6 @@ package com.mycozyhouse.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class MediaPostEntity extends BaseTimeEntity{
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToOne(mappedBy = "mediaPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "mediaPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private VideoEntity video;
 
     @OneToMany(mappedBy = "mediaPost", cascade = CascadeType.ALL, orphanRemoval = true)

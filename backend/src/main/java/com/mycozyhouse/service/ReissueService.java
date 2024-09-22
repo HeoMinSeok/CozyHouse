@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,36 +19,21 @@ public class ReissueService {
     private final RefreshRepository refreshRepository;
 
     @Transactional
-    public String reissueToken(String refreshToken) {
+    public Map<String, String> reissueToken(String refreshToken) {
 
-        // Refresh token 검증
-        if (jwtUtil.isExpired(refreshToken)) {
-            throw new IllegalArgumentException("Refresh token has expired");
-        }
-
-        // 카테고리 검증
-        String category = jwtUtil.getCategory(refreshToken);
-        if (!category.equals("refresh")) {
-            throw new IllegalArgumentException("Invalid refresh token");
-        }
-
-        // Refresh token 존재 여부 검증
-        if (!refreshRepository.existsByRefresh(refreshToken)) {
-            throw new IllegalArgumentException("Refresh token not found");
-        }
-
-        // 사용자 정보 추출
         String nickname = jwtUtil.getNickname(refreshToken);
 
-        // 새로운 토큰 생성
-        String newAccess = jwtUtil.createJwt("access", nickname, 50000L);
-        String newRefresh = jwtUtil.createJwt("refresh", nickname, 86400000L);
+        String access = jwtUtil.createJwt("access", nickname, 50000L);
+        String refresh = jwtUtil.createJwt("refresh", nickname, 86400000L);
 
-        // 기존 Refresh token 삭제 및 새로운 Refresh token 저장
         refreshRepository.deleteByRefresh(refreshToken);
-        addRefreshEntity(nickname, newRefresh, 86400000L);
+        addRefreshEntity(nickname, refresh, 86400000L);
 
-        return newAccess;
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access", access);
+        tokens.put("refresh", refresh);
+
+        return tokens;
     }
 
     public void addRefreshEntity(String nickname, String refresh, Long expiredMs) {
@@ -58,13 +45,5 @@ public class ReissueService {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity);
-    }
-
-    @Transactional
-    public String createNewRefreshToken(String refreshToken) {
-        String nickname = jwtUtil.getNickname(refreshToken);
-        String newRefresh = jwtUtil.createJwt("refresh", nickname, 86400000L);
-        addRefreshEntity(nickname, newRefresh, 86400000L);
-        return newRefresh;
     }
 }

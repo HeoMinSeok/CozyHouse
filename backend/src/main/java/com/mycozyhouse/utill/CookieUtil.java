@@ -21,6 +21,7 @@ public class CookieUtil {
         cookie.setMaxAge(24 * 60 * 60); // 1 day
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+//        cookie.setSameSite("None"); // 외부 도메인에서 접근 가능하도록 설정
         return cookie;
     }
 }

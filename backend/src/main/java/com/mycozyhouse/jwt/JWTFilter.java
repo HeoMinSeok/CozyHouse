@@ -3,6 +3,7 @@ package com.mycozyhouse.jwt;
 import com.mycozyhouse.config.CustomUserDetails;
 import com.mycozyhouse.dto.UserStatus;
 import com.mycozyhouse.entity.UserEntity;
+import com.mycozyhouse.utill.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +32,16 @@ public class JWTFilter extends OncePerRequestFilter {
      * @param filterChain 다음 필터를 호출하는 FilterChain 객체
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String cookieAccessToken = CookieUtil.getCookieValue(request, "access");
+
+        if (cookieAccessToken != null) {
+            response.setHeader("access", cookieAccessToken);
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authorization = request.getHeader("Authorization");
 
@@ -43,7 +53,8 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
 
         if (jwtUtil.isExpired(token)) {
-            System.out.println("token expired");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Refresh token has expired.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -55,7 +66,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null,
+                customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);

@@ -32,7 +32,8 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     // 인증 성공 시 호출되는 메서드
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws IOException {
 
         OAuth2User customUserDetails = (OAuth2User) authentication.getPrincipal();
 

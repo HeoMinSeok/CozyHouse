@@ -53,8 +53,9 @@ public class UserService {
         return dto;
     }
 
+    //사용자 정보
     public UserDto getUserInfo(String nickname) {
-        UserEntity userEntity = userRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("User not found with nickname: " + nickname));
+        UserEntity userEntity = userRepository.findByNickname(nickname);
 
         UserDto userDTO = new UserDto();
         userDTO.setId(userEntity.getId());

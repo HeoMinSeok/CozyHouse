@@ -4,7 +4,6 @@ import com.mycozyhouse.dto.ProviderType;
 import com.mycozyhouse.dto.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
