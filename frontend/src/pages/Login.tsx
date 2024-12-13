@@ -3,8 +3,11 @@ import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import useUserStore from '../stores/useUserStore';
 
+import { VscGithub } from "react-icons/vsc";
 import { GoogleLogin, KakaoLogin } from '../assets/svg/SvgIcons';
 import icons from '../assets/icons';
+
+import Toast, { showToast } from '../components/utils/Toast';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,16 +20,17 @@ const Login = () => {
   /*  디바운스 적용 입력 최적화 */
   const [dEmail] = useDebounce(email, 300);
   const [dPassword] = useDebounce(password, 300);
-  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await login({ email: dEmail, password: dPassword });
-      alert('로그인 완료')
+      showToast('Hi 👏🏻', 'success', darkMode);
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (error: any) {
-      console.error('로그인 실패:', error);
-      alert(error.message);
+      showToast(`${error}`, 'error', darkMode);
     }
   };
 
@@ -92,15 +96,28 @@ const Login = () => {
           </div>
           <p className="text-center text-gray-900 dark:text-white text-xs mb-1">SNS계정으로 간편 로그인/회원가입</p>
           <div className="flex items-center justify-center space-x-4">
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            <a
+              href="api/oauth2/authorization/google"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
               <GoogleLogin />
-            </button>
-            <button className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12">
+            </a>
+            <a
+              href="/api/oauth2/authorization/kakao"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
               <KakaoLogin />
-            </button>
+            </a>
+            <a
+              href="/api/oauth2/authorization/github"
+              className="flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md p-2 text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-12 h-12"
+            >
+              <VscGithub style={{ width: "100%", height: "100%" }} />
+            </a>
           </div>
         </div>
       </div>
+      <Toast darkMode={darkMode} />
     </div>
   );
 }

@@ -1,53 +1,124 @@
 // import axios from 'axios';
-import { UserLogin, UserSignUp, User } from './../types/userType';
+import {UserLogin, UserSignUp, User} from './../types/userType';
+import axios from 'axios';
 
 export default class userService {
-  // static BASE_URL = "/api";
-  static BASE_URL = "http://localhost:4000";
+    // static BASE_URL = "/api";
+    static BASE_URL = "http://localhost:8081";
 
-  /* 로그인 FETCH */
-  static async login(userLogin: UserLogin): Promise<User | null> {
-    const { email, password } = userLogin;
-    try {
-      const response = await fetch(`${this.BASE_URL}/users`);
-      if (!response.ok) {
-        throw new Error('네트워크 응답이 실패했습니다.');
-      }
+    /* 회원가입 Axios */
+    static async signUp(userSignup: UserSignUp): Promise<User | null> {
+        try {
+            const response = await axios.post(
+                `${this.BASE_URL}/users/signup`, userSignup,);
 
-      const users: User[] = await response.json();
-      const foundUser = users.find(user => user.email === email && user.password === password);
-      if (!foundUser) {
-        throw new Error('아이디 또는 비밀번호가 틀렸습니다.');
-      }
-      return foundUser;
-    } catch (e) {
-      console.error("로그인 에러", e);
-      throw e;  
+            if (response.status !== 200) {
+                throw new Error('회원가입에 실패했습니다.');
+            }
+            const newUser: User = response.data;
+            return newUser;
+        } catch (e) {
+            console.error("회원가입 에러", e);
+            throw new Error('회원가입 중 문제가 발생했습니다.');
+        }
     }
-  }
 
-  /* 회원가입 FETCH */
-  static async signUp(userSignup: UserSignUp): Promise<User | null> {
-    try {
-      const response = await fetch(`${this.BASE_URL}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userSignup),
-      });
+    /* 일반로그인 FETCH */
+    static async login(userLogin: UserLogin): Promise<User | null> {
+        const {email, password} = userLogin;
+        if (!email || !password) {
+            console.error('이메일 또는 비밀번호가 비어 있습니다.');
+            throw new Error('이메일 또는 비밀번호가 비어 있습니다.');
+        }
+        try {
+            const response = await axios.post(`${this.BASE_URL}/login`,
+                {email, password}, {withCredentials: true});
+            const {access} = response.headers;
+            localStorage.setItem('access', access);
 
-      if (!response.ok) {
-        throw new Error('회원가입에 실패했습니다.');
-      }
-
-      const newUser: User = await response.json();
-      return newUser;
-    } catch (e) {
-      console.error("회원가입 에러", e);
-      throw e;
+            return await this.getMyProfile(access);
+        } catch (e) {
+            console.error("로그인 에러", e);
+            throw e;
+        }
     }
-  }
 
-  /* 서버 연결 후 BASE_URL 및 AXIOS로 변경 */
+    // 인증번호 전송
+    static async sendVerificationCode(phone: string): Promise<string> {
+        try {
+            const response = await axios.post(
+                `${this.BASE_URL}/sms/send`, {phone});
+
+            if (response.status !== 200) {
+                throw new Error('인증번호 전송에 실패했습니다.');
+            }
+            return response.data;
+        } catch (e) {
+            console.error("인증번호 전송 에러", e);
+            throw e;
+        }
+    }
+
+    // 인증번호 검증
+    static async verifyVerificationCode(phone: string, verificationCode: string): Promise<string> {
+        try {
+            const response = await axios.post(
+                `${this.BASE_URL}/sms/verify`,
+                {phone, verificationCode}
+            );
+
+            if (response.status !== 200) {
+                throw new Error('인증번호 검증에 실패했습니다.');
+            }
+            return response.data;
+        } catch (e) {
+            console.error("인증번호 검증 에러", e);
+            throw e;
+        }
+    }
+
+    /* 액세스 토큰 확인 */
+    static async checkAccessToken() {
+        try {
+            const response = await axios.get(`${this.BASE_URL}/change`, {
+                withCredentials: true,
+            });
+            return response;
+        } catch (error) {
+            console.error('쿠키를 응답헤더로 반환 실패', error);
+            return null;
+        }
+    }
+
+    /* 액세스 토큰을 이용해 사용자 정보 가져오기 */
+    static async getMyProfile(accessToken: string): Promise<User | null> {
+        try {
+            const userResponse = await axios.get(`${this.BASE_URL}/users`, {
+                headers: {Authorization: `Bearer ${accessToken}`},
+            });
+            return userResponse.data;
+        } catch (error) {
+            console.error('사용자 정보 가져오기 실패:', error);
+            return null;
+        }
+    }
+
+    /* 리프레시 토큰을 이용해 액세스 토큰 재발급 */
+    static async reissueAccessToken() {
+        try {
+            console.log("reissueAccessToken실행")
+            const response = await axios.post(`${this.BASE_URL}/reissue`,{}, {
+                withCredentials: true
+            });
+            const { access } = response.headers;
+            localStorage.setItem('access', access);
+            return access;
+        } catch (error) {
+            console.error('액세스 토큰 재발급 실패:', error);
+            return null;
+        }
+    }
 }
+
+
+/* 서버 연결 후 BASE_URL 및 AXIOS로 변경 */

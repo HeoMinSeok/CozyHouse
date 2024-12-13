@@ -1,9 +1,11 @@
 export interface DropdownState {
   isCommunityOpen: boolean;
   isShoppingOpen: boolean;
+  isPostOpen: boolean;
 
   toggleCommunity: () => void;
   toggleShopping: () => void;
+  togglePost: () => void;
   closeAll: () => void;
 }
 
